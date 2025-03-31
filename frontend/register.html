@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Unibubble</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .error-message {
+      color: #ff4444;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    .input-group.has-error input {
+      border-color: #ff4444;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">
+          <i class="fas fa-comment-dots"></i> Unibubble
+        </div>
+        <h1>Create Your Account</h1>
+        <p>Join your campus community in just a few steps</p>
+      </div>
+
+      <form id="registerForm" class="auth-form">
+        <div class="input-group">
+          <label for="fullName">Full Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" id="fullName" placeholder="Alex Johnson" required>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <i class="fas fa-at"></i>
+            <input type="text" id="username" placeholder="alex123" required>
+          </div>
+          <div class="error-message" id="usernameError">Username already taken</div>
+        </div>
+        
+        <div class="input-group">
+          <label for="email">University Email</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="student@university.edu" required>
+          </div>
+          <div class="error-message" id="emailError">Invalid email format</div>
+        </div>
+        
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="••••••••" required minlength="8">
+            <button type="button" class="password-toggle">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+
+        <div class="auth-footer">
+          <p>Already have an account? <a href="login.html">Log in</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Password toggle
+    document.querySelector('.password-toggle').addEventListener('click', function() {
+      const password = document.getElementById('password');
+      const icon = this.querySelector('i');
+      if (password.type === 'password') {
+        password.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        password.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    });
+
+    // Form validation and submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const fullName = document.getElementById('fullName').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      
+      // Reset error states
+      resetErrors();
+      
+      // Validate inputs
+      let isValid = true;
+      
+      if (fullName.length < 2) {
+        showError('fullName', 'Please enter your full name');
+        isValid = false;
+      }
+      
+      if (username.length < 4) {
+        showError('username', 'Username must be at least 4 characters');
+        isValid = false;
+      }
+      
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('email', 'Please enter a valid university email');
+        isValid = false;
+      }
+      
+      if (password.length < 8) {
+        showError('password', 'Password must be at least 8 characters');
+        isValid = false;
+      }
+      
+      if (!isValid) return;
+      
+      // Check if username is available (in a real app, this would be a server check)
+      const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+      const usernameTaken = existingUsers.some(user => user.username === username);
+      
+      if (usernameTaken) {
+        showError('username', 'This username is already taken');
+        return;
+      }
+      
+      // Create user object
+      const newUser = {
+        fullName,
+        username,
+        email,
+        password, // Note: In a real app, you would hash the password
+        createdAt: new Date().toISOString()
+      };
+      
+      // Save to localStorage (simulating database)
+      existingUsers.push(newUser);
+      localStorage.setItem('users', JSON.stringify(existingUsers));
+      localStorage.setItem('currentUser', JSON.stringify({
+        username,
+        fullName,
+        email
+      }));
+      localStorage.setItem('isLoggedIn', 'true');
+      
+      // Redirect to home page
+      window.location.href = 'home.html';
+    });
+    
+    function showError(fieldId, message) {
+      const inputGroup = document.querySelector(`#${fieldId}`).closest('.input-group');
+      const errorElement = document.getElementById(`${fieldId}Error`);
+      
+      inputGroup.classList.add('has-error');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+    }
+    
+    function resetErrors() {
+      document.querySelectorAll('.input-group').forEach(group => {
+        group.classList.remove('has-error');
+      });
+      document.querySelectorAll('.error-message').forEach(error => {
+        error.style.display = 'none';
+      });
+    }
+  </script>
+</body>
+</html>

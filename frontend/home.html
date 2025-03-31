@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Unibubble</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    /* Improved Quick Actions Styles */
+    .quick-actions {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+    
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      background: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      width: 100%;
+      max-width: 240px;
+    }
+    
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    
+    .action-btn i {
+      font-size: 1.25rem;
+      color: #4361ee;
+      background: rgba(67, 97, 238, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .action-btn .btn-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .action-btn .btn-main {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .action-btn .btn-sub {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    
+    /* Dashboard Main Content Styles */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background: #f8f9fa;
+    }
+    
+    .content-section {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .quick-actions {
+        flex-direction: column;
+      }
+      
+      .action-btn {
+        max-width: 100%;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <i class="fas fa-comment-dots"></i> Unibubble
+      </div>
+      
+      <nav class="main-nav">
+        <a href="home.html" class="nav-item active">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="groups.html" class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>Groups</span>
+        </a>
+        <a href="events.html" class="nav-item">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Events</span>
+        </a>
+        <a href="messages.html" class="nav-item">
+          <i class="fas fa-comments"></i>
+          <span>Messages</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+      
+      <div class="user-profile" id="userProfile">
+        <!-- Dynamic content will be inserted here by JavaScript -->
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search...">
+        </div>
+        
+        <div class="header-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="badge">0</span>
+          </button>
+        </div>
+      </header>
+      
+      <section class="content-section">
+        <h2>Welcome back, <span id="welcomeUsername"></span>!</h2>
+        
+        <!-- Improved Quick Actions Section -->
+        <div class="quick-actions">
+          <button class="action-btn" onclick="location.href='groups.html'">
+            <i class="fas fa-users"></i>
+            <div class="btn-text">
+              <span class="btn-main">Join a Group</span>
+              <span class="btn-sub">Connect with peers</span>
+            </div>
+          </button>
+          
+          <button class="action-btn" onclick="location.href='events.html'">
+            <i class="fas fa-calendar-plus"></i>
+            <div class="btn-text">
+              <span class="btn-main">Create Event</span>
+              <span class="btn-sub">Organize activities</span>
+            </div>
+          </button>
+        </div>
+        
+        <h3>Your Upcoming Events</h3>
+        <div class="card-grid" id="eventsGrid">
+          <div class="card event-card">
+            <div class="card-header">
+              <div class="event-date">
+                <span class="day">15</span>
+                <span class="month">Oct</span>
+              </div>
+              <h3>Campus Hackathon</h3>
+            </div>
+            <p>24-hour coding competition with prizes</p>
+            <div class="card-footer">
+              <span><i class="fas fa-users"></i> 120 attending</span>
+              <button class="btn btn-small">RSVP</button>
+            </div>
+          </div>
+          
+          <div class="empty-state">
+            <i class="fas fa-calendar-alt fa-2x"></i>
+            <p>No upcoming events</p>
+            <button class="btn btn-primary" onclick="location.href='events.html'">Browse Events</button>
+          </div>
+        </div>
+        
+        <h3>Recent Groups</h3>
+        <div class="card-grid" id="groupsGrid">
+          <div class="card group-card">
+            <div class="card-header">
+              <h3>Computer Science Club</h3>
+              <span class="group-tag">Academic</span>
+            </div>
+            <p>For students interested in programming</p>
+            <div class="card-footer">
+              <span><i class="fas fa-users"></i> 24 members</span>
+              <button class="btn btn-small">View</button>
+            </div>
+          </div>
+          
+          <div class="empty-state">
+            <i class="fas fa-users fa-2x"></i>
+            <p>You haven't joined any groups yet</p>
+            <button class="btn btn-primary" onclick="location.href='groups.html'">Explore Groups</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      
+      if (!isLoggedIn || !currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Display user info
+      displayUserProfile(currentUser);
+      loadUserContent(currentUser.username);
+    });
+
+    function displayUserProfile(user) {
+      const userProfile = document.getElementById('userProfile');
+      const welcomeUsername = document.getElementById('welcomeUsername');
+      
+      // Create avatar initials
+      const initials = user.fullName.split(' ').map(name => name[0]).join('');
+      
+      userProfile.innerHTML = `
+        <div class="user-avatar">${initials}</div>
+        <div class="user-info">
+          <h4>${user.fullName}</h4>
+          <p>@${user.username}</p>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      `;
+      
+      welcomeUsername.textContent = user.fullName.split(' ')[0];
+    }
+
+    function loadUserContent(username) {
+      // In a real app, you would fetch user-specific content from an API
+      // For now, we'll use localStorage
+      const events = JSON.parse(localStorage.getItem('events')) || [];
+      const groups = JSON.parse(localStorage.getItem('groups')) || [];
+      
+      const userEvents = events.filter(event => 
+        event.attendees && event.attendees.includes(username)
+      );
+      
+      const userGroups = groups.filter(group => 
+        group.members && group.members.includes(username)
+      );
+      
+      displayEvents(userEvents);
+      displayGroups(userGroups);
+    }
+
+    function displayEvents(events) {
+      const eventsGrid = document.getElementById('eventsGrid');
+      
+      if (events.length === 0) return;
+      
+      eventsGrid.innerHTML = events.map(event => `
+        <div class="card event-card">
+          <div class="card-header">
+            <div class="event-date">
+              <span class="day">${new Date(event.date).getDate()}</span>
+              <span class="month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</span>
+            </div>
+            <h3>${event.title}</h3>
+          </div>
+          <p>${event.description || 'No description available'}</p>
+          <div class="card-footer">
+            <span><i class="fas fa-users"></i> ${event.attendees?.length || 0} attending</span>
+            <button class="btn btn-small">Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function displayGroups(groups) {
+      const groupsGrid = document.getElementById('groupsGrid');
+      
+      if (groups.length === 0) return;
+      
+      groupsGrid.innerHTML = groups.map(group => `
+        <div class="card group-card">
+          <div class="card-header">
+            <h3>${group.name}</h3>
+            <span class="group-tag">${group.category || 'General'}</span>
+          </div>
+          <p>${group.description || 'No description available'}</p>
+          <div class="card-footer">
+            <span><i class="fas fa-users"></i> ${group.members?.length || 1} members</span>
+            <button class="btn btn-small">View</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function logout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
